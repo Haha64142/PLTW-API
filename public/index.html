@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>PLTW API Hacker</title>
+  </head>
+  <body>
+    <h1>Hack</h1>
+    <form id="form">
+      <label for="endpoint">Endpoint:</label>
+      <input type="text" id="endpointHack" name="endpoint" />
+
+      <input type="submit" value="submit" />
+    </form>
+
+    <h1>Get data</h1>
+    <form id="get">
+      <label for="endpoint">Endpoint:</label>
+      <input type="text" id="endpointGet" name="endpoint" />
+
+      <input type="submit" value="submit" />
+    </form>
+    <pre id="result"></pre>
+
+    <script type="text/javascript">
+      const form = document.getElementById("form");
+      const endpointGet = document.getElementById("endpointGet");
+      const endpointHack = document.getElementById("endpointHack");
+      const resultElement = document.getElementById("result");
+
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+      });
+
+      document
+        .getElementById("get")
+        .addEventListener("submit", async (event) => {
+          event.preventDefault();
+
+          const result = await fetch("/get", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ endpoint: endpointGet.value }),
+          });
+          const data = await result.json();
+          resultElement.textContent = data.text;
+        });
+    </script>
+  </body>
+</html>

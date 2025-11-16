@@ -1,0 +1,23 @@
+{
+  "name": "pltw-api",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/Haha64142/PLTW-API#readme",
+  "bugs": {
+    "url": "https://github.com/Haha64142/PLTW-API/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Haha64142/PLTW-API.git"
+  },
+  "license": "ISC",
+  "author": "Haha64142",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
