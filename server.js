@@ -32,7 +32,7 @@ async function hack(endpoint, max = 9999, limit = 100) {
       if (finished) return;
       if (completed > max) {
         finished = true;
-        return reject("Password not found");
+        return resolve("Password not found");
       }
 
       while (active < limit && index <= max) {
@@ -58,7 +58,7 @@ async function hack(endpoint, max = 9999, limit = 100) {
           })
           .catch((err) => {
             finished = true;
-            return reject(`Error: ${err}`);
+            return resolve(`Error: ${err}`);
           })
           .finally(() => {
             --active;
