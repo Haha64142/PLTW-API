@@ -29,6 +29,14 @@
 
       form.addEventListener("submit", async (event) => {
         event.preventDefault();
+
+        const result = await fetch("/hack", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ endpoint: endpointHack.value })
+        });
+        const data = await result.json();
+        resultElement.textContent = data.text;
       });
 
       document
