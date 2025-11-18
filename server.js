@@ -88,6 +88,11 @@ async function getData(endpoint) {
   return response.text();
 }
 
+// For waking up a render application
+app.get("/wake", (req, res) => {
+  res.send("App is awake");
+});
+
 app.use(express.static(path.join(__dirname, "public")));
 
 const server = app.listen(port, () => {
