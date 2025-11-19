@@ -20,7 +20,7 @@ app.post("/hack", async (req, res) => {
   console.log(payload);
 });
 
-async function hack(endpoint, max = 9999, limit = 100) {
+async function hack(endpoint, max = 9999, limit = 50) {
   let finished = false;
   let active = 0;
   let index = 0;
