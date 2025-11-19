@@ -75,6 +75,15 @@
       form.addEventListener("submit", async (event) => {
         event.preventDefault();
 
+        switch (methodElement.value) {
+          case "get":
+            resultElement.textContent = "Getting data...";
+            break;
+          case "hack":
+            resultElement.textContent = "Hacking user...";
+            break;
+        }
+
         const result = await fetch("/" + methodElement.value, {
           method: "POST",
           headers: { "Content-Type": "application/json" },

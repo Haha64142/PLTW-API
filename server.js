@@ -57,6 +57,7 @@ async function hack(endpoint, max = 9999, limit = 100) {
             }
           })
           .catch((err) => {
+            console.log(err.cause.stack);
             finished = true;
             return resolve(`Error: ${err}`);
           })
