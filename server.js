@@ -58,7 +58,6 @@ async function hack(endpoint, max = 9999, limit = 100) {
           })
           .catch((err) => {
             console.log(err.cause.stack);
-            console.log(err.cause.message);
             console.log(err.cause);
             finished = true;
             return resolve(`Error: ${err}`);
@@ -89,6 +88,32 @@ app.post("/get", async (req, res) => {
 async function getData(endpoint) {
   const response = await fetch("https://cs-api.pltw.org/" + endpoint);
   return response.text();
+}
+
+app.post("/custom", async (req, res) => {
+  const data = req.body;
+  console.log(data);
+
+  const payload = { text: await customFetch(data.url, data.method) };
+  res.json(payload);
+  console.log(payload);
+});
+
+function customFetch(url, method) {
+  return new Promise((resolve, reject) => {
+    fetch(url, {
+      method: method,
+    })
+      .then((r) => r.text())
+      .then((body) => {
+        console.log(body);
+        return resolve(body);
+      })
+      .catch((err) => {
+        console.log(err.cause);
+        return resolve(`Error: ${err}`);
+      });
+  });
 }
 
 // For waking up a render application
