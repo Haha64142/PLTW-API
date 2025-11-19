@@ -1,4 +1,5 @@
 import express from "express";
+import { fetch, setGlobalDispatcher, Agent } from "undici";
 import path from "path";
 import readline from "readline";
 import { fileURLToPath } from "url";
@@ -8,6 +9,10 @@ const port = process.env.PORT || 80;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+setGlobalDispatcher(
+  new Agent({ connect: { timeout: 1000 * 60 * 5 }, bodyTimeout: 1000 * 60 * 5 })
+); // 5 minute timeout
 
 app.use(express.json());
 
